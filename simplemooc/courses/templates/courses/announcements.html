@@ -15,7 +15,7 @@
 	<h2><a href="{{ announcement.get_absolute_url }}">{{ announcement }}</a></h2>
 	<p>
 		Em {{ announcement.created_at|date:'d-m-Y h:m' }}
-		{% if announcement.updated_at %} &middot; Atualizado em {{ announcement.updated_at|date:'d-m-Y h:m' }} {% endif %}
+		{% if announcement.updated_at %} &middot; Atualizado em {{ announcement.updated_at|date:'d-m-Y H:i' }} {% endif %}
 	</p>
 	<p>{{ announcement.content|linebreaks|truncatewords:70 }}<p>
 		<a href="{{ announcement.get_absolute_url }}#comments">
