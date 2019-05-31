@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+wo^*38&0j&!_5a6ezm!ce040e28+5e2b=xb=+(_o-rkkbjrkn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #Allow all host headers for Heroku
 ALLOWED_HOSTS = ['*']
@@ -79,15 +79,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'simplemooc.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+"""
 
 
 # Password validation
@@ -166,6 +168,14 @@ django_heroku.settings(locals())
 
 #Heroku DB settings
 import dj_database_url
-DATABASES['default'] = dj_database_url.config()
+DATABASES = {
+    'default': dj_database_url.config()
+}
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+try:
+    from simplemooc.local_settings import *
+except ImportError:
+    pass
