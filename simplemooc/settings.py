@@ -145,13 +145,13 @@ MEDIA_URL = '/media/'
 
 
 # E-mails
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'rconceicao1987@gmail.com'
-EMAIL_HOST_PASSWORD = 'area1987'
-DEFAULT_FROM_EMAIL = f'Equipe Simple MOOC <{EMAIL_HOST_USER}>'
+EMAIL_HOST_USER = 'contato.mymooc@gmail.com'
+EMAIL_HOST_PASSWORD = 'mymooc123Abcde'
+DEFAULT_FROM_EMAIL = f'Equipe My MOOC <{EMAIL_HOST_USER}>'
 CONTACT_EMAIL = 'diogo.alves.ti@gmail.com'
 
 
