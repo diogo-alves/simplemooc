@@ -1,0 +1,51 @@
+{% extends 'courses/course_dashboard.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <a class="btn btn-primary" href="{% url 'courses:lessons' course.slug %}">Aulas</a>
+    <a class="btn btn-primary" href="{{ lesson.get_absolute_url }}">{{ lesson }}</a>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="custom-well">
+	<h2>{{ lesson }}</h2>
+	{{ lesson.description|linebreaks }}
+	<hr />
+	<h4 id="materials">Material da Aula</h4>
+
+	{% with lesson.materials.all as materials %}
+	{% if materials %}
+	<table class="pure-table full">
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Ação</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for material in materials %}
+			<tr class="{% cycle '' 'pure-table-odd' %}">
+				<td><a href="{{ material.get_absolute_url }}">{{ material }}</a></td>
+				<td>
+					{% if material.is_embedded %}
+					<a href="{{ material.get_absolute_url }}">
+						<i class="fa fa-video-camera"></i> Assistir
+					</a>
+					{% else %}
+					<a target="_blank" href="{{ material.file.url }}">
+						<i class="fa fa-download"></i> Baixar
+					</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+	<div>
+		<p>Não há materiais de apoio disponíveis</p>
+	</div>
+	{% endif %}
+	{% endwith %}
+</div>
+{% endblock %}

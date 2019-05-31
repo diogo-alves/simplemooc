@@ -1,0 +1,20 @@
+{% extends 'courses/course_dashboard.html' %}
+
+{% block breadcrumb %}
+	{{ block.super }}
+	<li>/</li>
+	<li><a href="{% url 'courses:undo_enrollment' course.slug %}">Cancelar Inscrição</a></li>
+{% endblock %}
+
+{% block dashboard_content %}
+<form method="post">
+	{% csrf_token %}
+	<h2>Você deseja realmente cancelar a inscrição deste curso?</h2>
+    <div class="pure-controls">
+        <button type="submit"  class="pure-button pure-button-primary">Confirmar</button>
+        <a href="{% url 'accounts:dashboard' %}" 
+        	class="pure-button">Voltar</a>
+    </div>
+</form>
+
+{% endblock %}
