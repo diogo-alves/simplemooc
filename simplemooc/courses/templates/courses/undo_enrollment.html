@@ -2,8 +2,7 @@
 
 {% block breadcrumb %}
 	{{ block.super }}
-	<li>/</li>
-	<li><a href="{% url 'courses:undo_enrollment' course.slug %}">Cancelar Inscrição</a></li>
+	<a class="btn btn-primary" href="{% url 'courses:undo_enrollment' course.slug %}">Cancelar Inscrição</a>
 {% endblock %}
 
 {% block dashboard_content %}
