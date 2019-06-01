@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from .models import PasswordReset
@@ -25,7 +26,10 @@ class PasswordResetForm(forms.Form):
         reset.save()
         subject = 'Criar nova senha no Simple MOOC'
         template_name = 'accounts/password_reset_email.html'
-        context = {'reset': reset}
+        context = {
+            'reset': reset,
+            'domain': settings.EMAIL_LINK_DOMAIN
+        }
         send_mail_template(subject, template_name, context, [user.email])
 
 

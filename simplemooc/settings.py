@@ -146,12 +146,13 @@ MEDIA_URL = '/media/'
 
 # E-mails
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
 EMAIL_HOST_USER = 'contato.mymooc@gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = 'mymooc123Abcde'
 DEFAULT_FROM_EMAIL = f'Equipe My MOOC <{EMAIL_HOST_USER}>'
+EMAIL_LINK_DOMAIN = 'http://mymooc.herokuapp.com'
 CONTACT_EMAIL = 'diogo.alves.ti@gmail.com'
 
 
