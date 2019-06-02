@@ -27,6 +27,8 @@ SECRET_KEY = '+wo^*38&0j&!_5a6ezm!ce040e28+5e2b=xb=+(_o-rkkbjrkn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+ADMINS = [('Diogo Alves', 'diogo.alves.ti@gmail.com')]
+
 #Allow all host headers for Heroku
 ALLOWED_HOSTS = ['*']
 
@@ -41,9 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'taggit',
+
     'simplemooc.core',
     'simplemooc.accounts',
     'simplemooc.courses',
+    'simplemooc.forum',
 ]
 
 MIDDLEWARE = [

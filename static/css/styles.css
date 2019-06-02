@@ -274,14 +274,19 @@ aside a, aside a:visited {
     float: right;
 }
 
-.post-title {
-    font-size: 2em !important;
-    color: #222;
-    margin-bottom: 0.2em;
+li.tags {
+    text-align:center;
 }
 
-.post-meta {
-    color: #999;
-    font-size: 90% !important;
-    margin: 0;
+li.tags a {
+    display: inline-block;
+}
+
+.green-check{
+    font-size: 24px;
+    color: green;
+}
+
+.remove{
+    font-size: 24px;
 }

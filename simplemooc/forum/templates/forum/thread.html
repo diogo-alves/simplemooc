@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="pure-g-r content-ribbon">
+  <div class="pure-u-1">
+    <div class="btn-group btn-breadcrumb">
+        <a class="btn btn-primary" href="{% url 'core:home' %}">
+        <i class="glyphicon glyphicon-home"></i> Início
+        </a>
+        <a class="btn btn-primary" href="{% url 'forum:index' %}">Fórum de Discussões</a>
+        <a class="btn btn-primary" href="{{ thread.get_absolute_url }}">{{ thread }}</a>
+    </div>
+  </div>
+</div>
+<div class="pure-g-r content-ribbon">
+  <div class="pure-u-1-4">
+      <div class="pure-menu pure-menu-open">
+          <ul>
+            <li class="pure-menu-heading">Tópicos do fórum</li>
+            <li>
+              <a href="{% url 'forum:index' %}">
+                <i class="fa fa-refresh"></i>
+                Mais Recentes
+              </a>
+            </li>
+            <li>
+              <a href="?order=views">
+                <i class="fa fa-eye"></i>
+                Mais Visualizados
+              </a>
+            </li>
+            <li>
+              <a href="?order=comments">
+                <i class="fa fa-comments-o"></i>
+                Mais Comentados
+              </a>
+            </li>
+            <hr />
+            <li class="pure-menu-heading">Tags</li>
+            <li class="tags" >
+              {% for tag in tags %}
+              <a href="{% url 'forum:index_tagged' tag.slug %}">
+                <i class="fa fa-tags"></i>
+                {{ tag }}
+              </a>
+              {% endfor %}
+            </li>
+          </ul>
+      </div>
+  </div>
+  <div class="pure-u-3-4">
+    <div class="inner">
+      <div class="custom-well">
+        <h2>{{ thread }}</h2>
+        {{ thread.body|linebreaks }}
+        <h5>Criado por {{ thread.author }}</h5>
+        <p>
+            <i class="fa fa-tags"></i>
+            {% with thread.tags.all as tags_thread %}
+            Tag{{ tags_thread.count|pluralize }}:
+            {% for tag in tags_thread %}
+            <a href="{% url 'forum:index_tagged' tag.slug %}" title="">{{ tag }}</a>{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            {% endwith %}
+            <a class="fright" href="" title="">Criado a {{ thread.created_at|timesince }} atrás</a>
+        </p>
+      </div>
+      <div class="custom-well">
+        <h4 id="comments">Respostas        
+        <a class="fright" href="#add_comment">Responder</a></h4>
+        <hr />
+        {% for reply in thread.replies.all %}
+        {% if reply.correct %}
+        <h4>
+          <i class="fa fa-check-circle green-check" aria-hidden="true"></i>
+          Resposta escolhida por {{ thread.author }}
+        </h4>
+          {% if reply.thread.author == user %}
+          <p>
+            <a class="pure-button button-error" href="{% url 'forum:reply_incorrect' reply.pk %}">
+              <i class="fa fa-times remove" aria-hidden="true"></i>
+              <strong>Cancelar esta escolha</strong>
+            </a>
+          </p>
+          {% endif %}
+        {% elif reply.thread.author == user %}
+          <p>
+            <a class="pure-button button-success" href="{% url 'forum:reply_correct' reply.pk %}">
+              <i class="fa fa-check green-check" aria-hidden="true"></i>
+              <strong>Escolher esta resposta</strong>
+            </a>
+          </p>
+        {% endif %}
+        <P>
+          <strong>{{ reply.author }}</strong> disse a {{ reply.created_at|timesince }} atrás:<br />
+          {{ reply.reply|linebreaksbr }}
+        </P>
+        <hr />
+        {% empty %}
+        <h4>Não há respostas ainda</h4>
+        <p>Seja o primeiro a responder!</p>
+        <hr />
+        {% endfor %}
+        <form id="add_comment" class="pure-form pure-form-stacked" method="post" >
+          {% csrf_token %}
+          <fieldset>
+            {% for field in form %}
+            <div class="pure-control-group">
+              {{ field_label_tag }}
+              {{ field }}
+              {{ field.errors }}
+            </div>
+            {% endfor %}
+
+            <div class="pure-controls">
+                      <button type="submit" class="pure-button pure-button-primary">Responder</button>
+                  </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

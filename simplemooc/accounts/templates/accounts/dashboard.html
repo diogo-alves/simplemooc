@@ -7,9 +7,10 @@
     <div class="pure-u-1">
         <div class="btn-group btn-breadcrumb">
             {% block breadcrumb %}
-            <a class="btn btn-primary" href="{% url 'accounts:dashboard' %}">
-                <i class="glyphicon glyphicon-home"></i> Meu Painel
+            <a class="btn btn-primary" href="{% url 'core:home' %}">
+                <i class="glyphicon glyphicon-home"></i> Início
             </a>
+            <a class="btn btn-primary" href="{% url 'accounts:dashboard' %}">Meu Painel</a>
             {% endblock %}
         </div>
     </div>
@@ -56,7 +57,7 @@
             <h2>Meus Cursos</h2>
                 {% load_my_courses user as enrollments %}
                 {% for enrollment in enrollments %}
-                <div class="well">
+                <div class="custom-well">
                     <h3>
                         {{ enrollment.course }} 
                         (Liberado em {{ enrollment.course.start_date|date:'d/m/Y' }})
