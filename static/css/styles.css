@@ -290,3 +290,7 @@ li.tags a {
 .remove{
     font-size: 24px;
 }
+
+.hidden {
+    display: none;
+}

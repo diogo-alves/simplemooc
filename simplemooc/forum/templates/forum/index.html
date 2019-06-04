@@ -35,9 +35,9 @@
               </a>
             </li>
             <li class="pure-menu-heading">Tags</li>
-            <li>
+            <li class="tags">
               {% for tag in tags %}
-              <a class="tags" href="{% url 'forum:index_tagged' tag.slug %}">
+              <a href="{% url 'forum:index_tagged' tag.slug %}">
                 <i class="fa fa-tags"></i>
                 {{ tag }}
               </a>

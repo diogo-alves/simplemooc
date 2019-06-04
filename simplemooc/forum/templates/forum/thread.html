@@ -54,7 +54,7 @@
         <h2>{{ thread }}</h2>
         {{ thread.body|linebreaks }}
         <h5>Criado por {{ thread.author }}</h5>
-        <p>
+        <p class="a">
             <i class="fa fa-tags"></i>
             {% with thread.tags.all as tags_thread %}
             Tag{{ tags_thread.count|pluralize }}:
@@ -65,32 +65,35 @@
             <a class="fright" href="" title="">Criado a {{ thread.created_at|timesince }} atrás</a>
         </p>
       </div>
-      <div class="custom-well">
+      <div class="custom-well" id="replies">
         <h4 id="comments">Respostas        
         <a class="fright" href="#add_comment">Responder</a></h4>
         <hr />
         {% for reply in thread.replies.all %}
-        {% if reply.correct %}
-        <h4>
-          <i class="fa fa-check-circle green-check" aria-hidden="true"></i>
-          Resposta escolhida por {{ thread.author }}
-        </h4>
-          {% if reply.thread.author == user %}
-          <p>
-            <a class="pure-button button-error" href="{% url 'forum:reply_incorrect' reply.pk %}">
-              <i class="fa fa-times remove" aria-hidden="true"></i>
-              <strong>Cancelar esta escolha</strong>
-            </a>
-          </p>
-          {% endif %}
-        {% elif reply.thread.author == user %}
-          <p>
-            <a class="pure-button button-success" href="{% url 'forum:reply_correct' reply.pk %}">
-              <i class="fa fa-check green-check" aria-hidden="true"></i>
-              <strong>Escolher esta resposta</strong>
-            </a>
-          </p>
+        <div id="reply">
+        {% if reply.thread.author == user %}
+          <h4 class="reply-correct-msg{% if not reply.correct %} hidden{% endif %}">
+            <i class="fa fa-check-circle green-check" aria-hidden="true"></i>
+            Resposta escolhida por você
+          </h4>
+          <a href="{% url 'forum:reply_incorrect' reply.pk %}"
+             class="pure-button button-error reply-cancel-correct-link{% if not reply.correct %} hidden{% endif %}">
+            <i class="fa fa-times remove" aria-hidden="true"></i>
+            <strong>Cancelar esta escolha</strong>
+          </a>
+          <a href="{% url 'forum:reply_correct' reply.pk %}"
+             class="pure-button button-success reply-choose-correct-link{% if reply.correct %} hidden{% endif %}">
+            <i class="fa fa-check green-check" aria-hidden="true"></i>
+            <strong>Escolher esta resposta</strong>
+          </a>
+        {% elif reply.correct %}
+          <h4>
+            <i class="fa fa-check-circle green-check" aria-hidden="true"></i>
+            Resposta escolhida por {{ thread.author }}
+          </h4>
         {% endif %}
+        </div>
+        <br />
         <P>
           <strong>{{ reply.author }}</strong> disse a {{ reply.created_at|timesince }} atrás:<br />
           {{ reply.reply|linebreaksbr }}
@@ -121,4 +124,42 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  $(".reply-cancel-correct-link").on("click", function(e){
+    e.preventDefault();
+    let $this = $(this);
+    let $reply = $this.closest("#reply");
+    $.get($this.attr('href'), function(data){
+      if(data.success){
+        $this.addClass('hidden');
+        $reply.find(".reply-correct-msg").addClass("hidden");
+        $reply.find(".reply-choose-correct-link").removeClass("hidden");
+      } else {
+        alert(data.message);
+      }
+    }, "json");
+  });
+  $(".reply-choose-correct-link").on("click", function(e){
+    e.preventDefault();
+    let $this = $(this);
+    let $reply = $this.closest("#reply");
+    let $replies = $("#replies");
+    $.get($this.attr("href"), function(data){
+      if(data.success){
+        $replies.find(".reply-correct-msg").addClass("hidden");
+        $replies.find(".reply-cancel-correct-link").addClass("hidden");
+        $replies.find(".reply-choose-correct-link").removeClass("hidden");
+
+        $this.addClass("hidden");
+        $reply.find(".reply-correct-msg").removeClass("hidden");
+        $reply.find(".reply-cancel-correct-link").removeClass("hidden");        
+      } else {
+        alert(data.message);
+      }
+    }, "json");
+  });
+</script>
 {% endblock %}

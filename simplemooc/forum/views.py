@@ -1,4 +1,7 @@
+import json
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import DetailView, ListView, View
 
@@ -69,8 +72,9 @@ class ReplyCorrectView(View):
         reply = get_object_or_404(Reply, pk=pk, thread__author=request.user)
         reply.correct = self.correct
         reply.save()
-        if self.correct:
-            messages.success(request, 'Resposta marcada com sucesso!')
-        else:
-            messages.success(request, 'Resposta desmarcada com sucesso!')
+        message = 'Resposta atualizada com sucesso!'
+        if request.is_ajax():
+            data = {'success': True, 'message': message}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        messages.success(request, message)
         return redirect(reply.thread.get_absolute_url())
