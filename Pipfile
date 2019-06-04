@@ -11,6 +11,7 @@ psycopg2 = "*"
 django-heroku = "*"
 whitenoise = "*"
 django-taggit = "*"
+python-decouple = "*"
 
 [dev-packages]
 model-mommy = "*"

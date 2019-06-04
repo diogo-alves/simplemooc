@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 import django_heroku
+from decouple import config
+from dj_database_url import parse as db_url
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,15 +25,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+wo^*38&0j&!_5a6ezm!ce040e28+5e2b=xb=+(_o-rkkbjrkn'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ADMINS = [('Diogo Alves', 'diogo.alves.ti@gmail.com')]
 
-#Allow all host headers for Heroku
-ALLOWED_HOSTS = ['*']
+# Allow host headers for Heroku
+ALLOWED_HOSTS = ['http://mymooc.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -83,18 +86,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'simplemooc.wsgi.application'
 
-
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-"""
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': config(
+        'DATABASE_URL',
+        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
+        cast=db_url
+    )
 }
-"""
 
 
 # Password validation
@@ -114,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 
 # Internationalization
@@ -150,15 +150,15 @@ MEDIA_URL = '/media/'
 
 
 # E-mails
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'contato.mymooc@gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = 'mymooc123Abcde'
-DEFAULT_FROM_EMAIL = f'Equipe My MOOC <{EMAIL_HOST_USER}>'
-EMAIL_LINK_DOMAIN = 'http://mymooc.herokuapp.com'
-CONTACT_EMAIL = 'diogo.alves.ti@gmail.com'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='')
+EMAIL_LINK_DOMAIN = config('EMAIL_LINK_DOMAIN', default='')
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='')
 
 
 # Auth
@@ -172,16 +172,5 @@ PASSWORD_RESET_TIMEOUT_DAYS = 2
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
-#Heroku DB settings
-import dj_database_url
-DATABASES = {
-    'default': dj_database_url.config()
-}
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-
-try:
-    from simplemooc.local_settings import *
-except ImportError:
-    pass
